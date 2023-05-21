@@ -1,0 +1,10 @@
+.tilt {
+    margin: 0;
+    width: 100px;
+    height: 100px;
+    background: rgb(63,94,251);
+    background: -moz-radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 91%, rgba(248,70,110,1) 97%);
+    background: -webkit-radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 91%, rgba(248,70,110,1) 97%);
+    background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 91%, rgba(248,70,110,1) 97%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#3f5efb",endColorstr="#f8466e",GradientType=1); 
+}
