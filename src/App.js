@@ -1,114 +1,82 @@
+import React, {Component} from 'react';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import { useCallback } from "react";
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
+import ParticlesBackground from './components/ParticlesBackground/ParticlesBackground';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 
-const particlesOptions = {
-  background: {
-    color: {
-        value: "#0d47a1",
-      },
-  },
-  fpsLimit: 120,
-  interactivity: {
-      events: {
-          onClick: {
-              enable: true,
-              mode: "push",
-          },
-          onHover: {
-              enable: true,
-              mode: "repulse",
-          },
-          resize: true,
-      },
-      modes: {
-          push: {
-              quantity: 4,
-          },
-          repulse: {
-              distance: 90,
-              duration: 0.4,
-          },
-      },
-  },
-  particles: {
-      color: {
-          value: "#ffffff",
-      },
-      links: {
-          color: "#ffffff",
-          distance: 150,
-          enable: true,
-          opacity: 0.5,
-          width: 1,
-      },
-      collisions: {
-          enable: true,
-      },
-      move: {
-          directions: "none",
-          enable: true,
-          outModes: {
-              default: "bounce",
-          },
-          random: false,
-          speed: 1,
-          straight: false,
-      },
-      number: {
-          density: {
-              enable: true,
-              area: 800,
-          },
-          value: 150,
-      },
-      opacity: {
-          value: 0.5,
-      },
-      shape: {
-          type: "circle",
-      },
-      size: {
-          value: { min: 1, max: 5 },
-      },
-  },
-  detectRetina: true,
+const PAT = '6673d9ccf9ca477b8b74eb0e1379a1e1';
+const USER_ID = 'beel5zfvt7ky';       
+const APP_ID = 'test';
+const MODEL_ID = 'face-detection';   
+let IMAGE_URL = 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bGFyZ2UlMjBjcm93ZHxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80';
+
+let raw = {
+    "user_app_id": {
+        "user_id": USER_ID,
+        "app_id": APP_ID
+    },
+    "inputs": [
+        {
+            "data": {
+                "image": {
+                    "url": IMAGE_URL
+                }
+            }
+        }
+    ]
+};
+
+const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Key ' + PAT
+    },
+    body: JSON.stringify(raw)
+};
+
+function buildRequestOptions(url) {
+    raw.inputs[0].data.image.url = url;
+    requestOptions.body = JSON.stringify(raw);
 }
 
-function App() {
-  const particlesInit = useCallback(async engine => {
-      console.log(engine);
-      // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
-      // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
-      // starting from v2 you can add only the features you need reducing the bundle size
-      await loadFull(engine);
-  }, []);
+class App extends Component {
+    constructor() {
+        super();
+        this.state = {
+            input: '',
+        }
+    }
 
-  const particlesLoaded = useCallback(async container => {
-      await console.log(container);
-  }, []);
-  
-  return (
-    <div className="App">
-      <Particles
-            className='particles'
-            id="tsparticles"
-            init={particlesInit}
-            loaded={particlesLoaded}
-            options={particlesOptions}
-        />
-      <Navigation />
-      <Logo />
-      <Rank />
-      <ImageLinkForm />
-      {/*<FaceRecognition />*/}
-    </div>
-  );
+    onInputChange = (event) => {
+        IMAGE_URL = event.target.value;
+        buildRequestOptions(IMAGE_URL);
+    }
+
+    onSubmit = (event) => {
+        this.setState({imageUrl: IMAGE_URL});
+        console.log('click');
+        fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
+            .then(response => response.json())
+            .then(result => console.log(result))
+            .catch(error => console.log('error', error));
+    }
+
+    render(){
+        return (
+            <div className="App">
+            <ParticlesBackground />
+            <Navigation />
+            <Logo />
+            <Rank />
+            <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
+            <FaceRecognition imageUrl={IMAGE_URL}/>
+            </div>
+        );
+    }
 }
 
 export default App;

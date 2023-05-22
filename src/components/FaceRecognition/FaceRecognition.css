@@ -1,0 +1,8 @@
+.imageHolder{
+    width: 500px;
+    height: 300px;
+}
+
+.imageDetect{
+    object-fit: contain;
+}
