@@ -3,6 +3,20 @@
     height: 300px;
 }
 
-.imageDetect{
+#imageDetect{
     object-fit: contain;
+}
+
+#faceCanvas {
+    position: relative;
+}
+
+.bounding-box {
+    position: absolute;
+    border: 3px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+    caret-color: transparent;
 }

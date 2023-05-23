@@ -48,7 +48,26 @@ class App extends Component {
         super();
         this.state = {
             input: '',
+            box: {}
         }
+    }
+
+    calcFaceLoc = (data) => {
+        const face = data.outputs[0].data.regions[0].region_info.bounding_box;
+        const image = document.getElementById("imageDetect");
+        const width = Number(image.width);
+        const height = Number(image.height);
+        return {
+            leftCol: face.left_col * width,
+            topRow: face.top_row * height,
+            rightCol: width - (face.right_col * width),
+            bottomRow: height - (face.bottom_row * height)
+        }
+    }
+
+    displayFaceBox = (box) => {
+        console.log(box);
+        this.setState({box: box});
     }
 
     onInputChange = (event) => {
@@ -58,10 +77,9 @@ class App extends Component {
 
     onSubmit = (event) => {
         this.setState({imageUrl: IMAGE_URL});
-        console.log('click');
         fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
             .then(response => response.json())
-            .then(result => console.log(result))
+            .then(result => this.displayFaceBox(this.calcFaceLoc(result)))
             .catch(error => console.log('error', error));
     }
 
@@ -73,7 +91,7 @@ class App extends Component {
             <Logo />
             <Rank />
             <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
-            <FaceRecognition imageUrl={IMAGE_URL}/>
+            <FaceRecognition box={this.state.box} imageUrl={IMAGE_URL}/>
             </div>
         );
     }
