@@ -1,19 +1,17 @@
 .imageHolder{
     width: 500px;
-    height: 300px;
+    height: auto;
+    position: relative;
 }
 
 #imageDetect{
     object-fit: contain;
 }
 
-#faceCanvas {
-    position: relative;
-}
-
 .bounding-box {
     position: absolute;
-    border: 3px solid black;
+    border: 2px solid #149df2;
+    border-radius: 3px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

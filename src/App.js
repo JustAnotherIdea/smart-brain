@@ -6,6 +6,8 @@ import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import ParticlesBackground from './components/ParticlesBackground/ParticlesBackground';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 
 const PAT = '6673d9ccf9ca477b8b74eb0e1379a1e1';
 const USER_ID = 'beel5zfvt7ky';       
@@ -48,7 +50,9 @@ class App extends Component {
         super();
         this.state = {
             input: '',
-            box: {}
+            box: {},
+            route: 'signin',
+            isSignedIn: false
         }
     }
 
@@ -60,13 +64,12 @@ class App extends Component {
         return {
             leftCol: face.left_col * width,
             topRow: face.top_row * height,
-            rightCol: width - (face.right_col * width),
-            bottomRow: height - (face.bottom_row * height)
+            rightCol: width - face.right_col * width,
+            bottomRow: height - face.bottom_row * height
         }
     }
 
     displayFaceBox = (box) => {
-        console.log(box);
         this.setState({box: box});
     }
 
@@ -79,19 +82,57 @@ class App extends Component {
         this.setState({imageUrl: IMAGE_URL});
         fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
             .then(response => response.json())
-            .then(result => this.displayFaceBox(this.calcFaceLoc(result)))
+            .then(result => {
+                console.log(result);
+                this.displayFaceBox(this.calcFaceLoc(result))
+            })
             .catch(error => console.log('error', error));
     }
 
+    onRouteChange = (route) => {
+        if(route === 'signout') {
+            this.setState({isSignedIn: false});
+        } else if(route === 'home') {
+            this.setState({isSignedIn: true});
+        }
+        this.setState({route: route});
+    }
+
     render(){
+        const { isSignedIn, route, box } = this.state;
         return (
             <div className="App">
-            <ParticlesBackground />
-            <Navigation />
-            <Logo />
-            <Rank />
-            <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
-            <FaceRecognition box={this.state.box} imageUrl={IMAGE_URL}/>
+                <ParticlesBackground />
+                <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
+                {/* shuld probably make this a function https://stackoverflow.com/questions/46592833/how-to-use-switch-statement-inside-a-react-component */}
+                {
+                    {
+                        'home': <div>
+                                    <Logo />
+                                    <Rank />
+                                    <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
+                                    <FaceRecognition box={box} imageUrl={IMAGE_URL}/>
+                                </div>,
+                        'signin': <SignIn onRouteChange={this.onRouteChange}/>,
+                        'signout': <SignIn onRouteChange={this.onRouteChange}/>,
+                        'register': <Register onRouteChange={this.onRouteChange}/>
+                    }[route]
+                }
+
+                {/* Andrie's method { route === 'home'
+                ?   <div>
+                        <Logo />
+                        <Rank />
+                        <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
+                        <FaceRecognition box={box} imageUrl={IMAGE_URL}/>
+                    </div>
+                :   (
+                        route === 'signin'
+                        ? <SignIn onRouteChange={this.onRouteChange}/>
+                        : <Register onRouteChange={this.onRouteChange}/>
+                    )
+                
+                } */}
             </div>
         );
     }
