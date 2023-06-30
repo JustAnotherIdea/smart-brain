@@ -52,8 +52,25 @@ class App extends Component {
             input: '',
             box: {},
             route: 'signin',
-            isSignedIn: false
+            isSignedIn: false,
+            user: {
+                id: '',
+                name: '',
+                email: '',
+                entries: 0,
+                joined: '',
+            }
         }
+    }
+
+    loadUser = (data) => {
+        this.setState({user: {
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            entries: data.entries,
+            joined: data.entries,
+        }});
     }
 
     calcFaceLoc = (data) => {
@@ -83,6 +100,17 @@ class App extends Component {
         fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
             .then(response => response.json())
             .then(result => {
+                fetch('http://localhost:3000/image', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        id: this.state.user.id
+                    })
+                })
+                    .then(response => response.json())
+                    .then(count => {
+                        this.setState(Object.assign(this.state.user, {entries: count}));
+                    })
                 console.log(result);
                 this.displayFaceBox(this.calcFaceLoc(result))
             })
@@ -109,13 +137,13 @@ class App extends Component {
                     {
                         'home': <div>
                                     <Logo />
-                                    <Rank />
+                                    <Rank name={this.state.user.name} entries={this.state.user.entries} />
                                     <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
                                     <FaceRecognition box={box} imageUrl={IMAGE_URL}/>
                                 </div>,
-                        'signin': <SignIn onRouteChange={this.onRouteChange}/>,
-                        'signout': <SignIn onRouteChange={this.onRouteChange}/>,
-                        'register': <Register onRouteChange={this.onRouteChange}/>
+                        'signin': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>,
+                        'signout': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>,
+                        'register': <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange}/>
                     }[route]
                 }
 
