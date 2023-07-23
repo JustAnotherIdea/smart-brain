@@ -7,3 +7,27 @@
   justify-content: center;
   overflow: hidden;
 }
+
+@media only screen and (max-width: 500px)  and (min-width: 350px) {
+  p {
+    font-size: 1rem !important;
+  }
+  button {
+    font-size: 1rem !important;
+  }
+  div {
+    font-size: 2rem !important;
+  }
+}
+
+@media only screen and (max-width: 349px){
+  p {
+    font-size: .8rem !important;
+  }
+  button {
+    font-size: .8rem !important;
+  }
+  div {
+    font-size: 1.6rem !important;
+  }
+}

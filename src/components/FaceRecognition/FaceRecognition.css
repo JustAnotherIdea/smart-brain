@@ -4,6 +4,12 @@
     position: relative;
 }
 
+@media only screen and (max-width: 500px){
+    .imageHolder{
+        width: 100vw;
+    }
+}
+
 #imageDetect{
     object-fit: contain;
 }
