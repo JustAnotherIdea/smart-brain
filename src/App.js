@@ -75,8 +75,8 @@ class App extends Component {
     }
 
     onSubmit = async (event) => {
-        /*if(await this.checkImage(this.state.input)){
-            this.setState({imageUrl: this.state.input});*/
+        /*if(await this.checkImage(this.state.input)){*/
+            this.setState({imageUrl: this.state.input});
             this.setState({boxes: []});
             fetch("https://smart-brain-api-c6j8.onrender.com/imageurl", {
                 method: "POST",
