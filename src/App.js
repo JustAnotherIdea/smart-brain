@@ -30,14 +30,14 @@ class App extends Component {
         this.state = initialState;
     }
 
-    checkImage = (url) => {
+    /*checkImage = (url) => {
         const img = new Image();
         img.src = url;
         return new Promise((resolve) => {
           img.onload = () => resolve(true);
           img.onerror = () => resolve(false);
         });
-      }
+      }*/
 
     loadUser = (data) => {
         this.setState({user: {
@@ -75,7 +75,7 @@ class App extends Component {
     }
 
     onSubmit = async (event) => {
-        if(await this.checkImage(this.state.input)){
+        /*if(await this.checkImage(this.state.input)){*/
             this.setState({imageUrl: this.state.input});
             this.setState({boxes: []});
             fetch("https://smart-brain-api-new.onrender.com/imageurl", {
@@ -102,9 +102,9 @@ class App extends Component {
                     }
                 })
                 .catch(error => console.log('error', error));
-        } else {
+        /*} else {
             console.log('error: invalid image url');
-        }
+        }*/
     }
 
     onRouteChange = (route) => {
