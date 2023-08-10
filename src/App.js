@@ -78,7 +78,7 @@ class App extends Component {
         if(await this.checkImage(this.state.input)){
             this.setState({imageUrl: this.state.input});
             this.setState({boxes: []});
-            fetch("https://smart-brain-api-c6j8.onrender.com/imageurl", {
+            fetch("https://smart-brain-api-new.onrender.com/imageurl", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({url: this.state.input})
@@ -86,7 +86,7 @@ class App extends Component {
                 .then(response => response.json())
                 .then(result => {
                     if (result.status.description !== "Failure"){
-                        fetch('https://smart-brain-api-c6j8.onrender.com/image', {
+                        fetch('https://smart-brain-api-new.onrender.com/image', {
                             method: 'PUT',
                             headers: { 'Content-Type': 'application/json'},
                             body: JSON.stringify({
