@@ -50,18 +50,26 @@ class App extends Component {
     }
 
     calcFaceLoc = (data) => {
+        console.log('Face detection response:', data);
+        
+        if (!data?.outputs?.[0]?.data?.regions) {
+            console.log('No face regions found in response');
+            return [];
+        }
+        
         const image = document.getElementById("imageDetect");
         const width = Number(image.width);
         const height = Number(image.height);
         const boxArr = [];
-        for(let i=0; i<data.outputs[0].data.regions.length; i++) {
+        
+        for(let i = 0; i < data.outputs[0].data.regions.length; i++) {
             let face = data.outputs[0].data.regions[i].region_info.bounding_box;
             boxArr.push({
                 leftCol: face.left_col * width,
                 topRow: face.top_row * height,
                 rightCol: width - face.right_col * width,
                 bottomRow: height - face.bottom_row * height
-            })
+            });
         }
         return boxArr;
     }
@@ -86,8 +94,9 @@ class App extends Component {
             });
             
             const result = await response.json();
+            console.log('API Response:', result);
             
-            if (result.status.description !== "Failure") {
+            if (result && result.status && result.status.description !== "Failure") {
                 try {
                     const imageResponse = await fetch('https://smart-brain-api-new.onrender.com/image', {
                         method: 'PUT',
@@ -100,13 +109,18 @@ class App extends Component {
                     const count = await imageResponse.json();
                     this.setState(Object.assign(this.state.user, {entries: count}));
                     
-                    const boxes = this.calcFaceLoc(result);
-                    this.displayFaceBox(boxes);
+                    if (result.outputs && result.outputs[0]?.data?.regions) {
+                        const boxes = this.calcFaceLoc(result);
+                        this.displayFaceBox(boxes);
+                    } else {
+                        console.log('No faces detected in the image');
+                        this.setState({boxes: []});
+                    }
                 } catch (err) {
                     console.error('Error updating entry count:', err);
                 }
             } else {
-                console.error('Face detection failed:', result.status.description);
+                console.error('Face detection failed:', result);
             }
         } catch (error) {
             console.error('Error detecting faces:', error);
