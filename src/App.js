@@ -75,36 +75,42 @@ class App extends Component {
     }
 
     onSubmit = async (event) => {
-        /*if(await this.checkImage(this.state.input)){*/
-            this.setState({imageUrl: this.state.input});
-            this.setState({boxes: []});
-            fetch("https://smart-brain-api-new.onrender.com/imageurl", {
+        this.setState({imageUrl: this.state.input});
+        this.setState({boxes: []});
+        
+        try {
+            const response = await fetch("https://smart-brain-api-new.onrender.com/imageurl", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({url: this.state.input})
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.status.description !== "Failure"){
-                        fetch('https://smart-brain-api-new.onrender.com/image', {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json'},
-                            body: JSON.stringify({
-                                id: this.state.user.id
-                            })
+            });
+            
+            const result = await response.json();
+            
+            if (result.status.description !== "Failure") {
+                try {
+                    const imageResponse = await fetch('https://smart-brain-api-new.onrender.com/image', {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            id: this.state.user.id
                         })
-                            .then(response => response.json())
-                            .then(count => {
-                                this.setState(Object.assign(this.state.user, {entries: count}));
-                            })
-                            .catch(err => console.log('error', err));
-                        this.displayFaceBox(this.calcFaceLoc(result))
-                    }
-                })
-                .catch(error => console.log('error', error));
-        /*} else {
-            console.log('error: invalid image url');
-        }*/
+                    });
+                    
+                    const count = await imageResponse.json();
+                    this.setState(Object.assign(this.state.user, {entries: count}));
+                    
+                    const boxes = this.calcFaceLoc(result);
+                    this.displayFaceBox(boxes);
+                } catch (err) {
+                    console.error('Error updating entry count:', err);
+                }
+            } else {
+                console.error('Face detection failed:', result.status.description);
+            }
+        } catch (error) {
+            console.error('Error detecting faces:', error);
+        }
     }
 
     onRouteChange = (route) => {
