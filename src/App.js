@@ -87,7 +87,7 @@ class App extends Component {
         this.setState({boxes: []});
         
         try {
-            const response = await fetch("https://smart-brain-api-new.onrender.com/imageurl", {
+            const response = await fetch("https://master.smart-brain-api.c66.me/imageurl", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({url: this.state.input})
@@ -98,7 +98,7 @@ class App extends Component {
             
             if (result && result.status && result.status.description !== "Failure") {
                 try {
-                    const imageResponse = await fetch('https://smart-brain-api-new.onrender.com/image', {
+                    const imageResponse = await fetch('https://master.smart-brain-api.c66.me/image', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json'},
                         body: JSON.stringify({
