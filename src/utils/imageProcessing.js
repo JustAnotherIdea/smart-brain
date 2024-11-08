@@ -1,5 +1,5 @@
-const MAX_IMAGE_SIZE = 20 * 1024 * 1024; // 20MB in bytes
-const MAX_DIMENSION = Math.sqrt(85000000); // sqrt of 85 megapixels
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // Reduced to 10MB
+const MAX_DIMENSION = Math.sqrt(42500000); // Reduced to sqrt of 42.5 megapixels (half of 85)
 
 const resizeImage = (file) => {
     return new Promise((resolve) => {
@@ -12,7 +12,11 @@ const resizeImage = (file) => {
             let width = img.width;
             let height = img.height;
             
-            // Check if either dimension exceeds MAX_DIMENSION
+            // Scale down dimensions by 50%
+            width = width * 0.5;
+            height = height * 0.5;
+            
+            // Check if still exceeds MAX_DIMENSION
             if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
                 if (width > height) {
                     height = (height / width) * MAX_DIMENSION;
@@ -23,9 +27,9 @@ const resizeImage = (file) => {
                 }
             }
             
-            // Additional check for total pixels
-            if (width * height > 85000000) {
-                const scale = Math.sqrt(85000000 / (width * height));
+            // Check for total pixels
+            if (width * height > 42500000) { // Half of original limit
+                const scale = Math.sqrt(42500000 / (width * height));
                 width *= scale;
                 height *= scale;
             }
@@ -41,7 +45,7 @@ const resizeImage = (file) => {
                 resolve(new File([blob], file.name, {
                     type: file.type
                 }));
-            }, file.type, 0.9);
+            }, file.type, 0.85); // Slightly reduced quality for smaller file size
         };
     });
 };
