@@ -239,18 +239,23 @@ class App extends Component {
             <div className="App">
                 <ParticlesBackground />
                 <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange}/>
-                {/* shuld probably make this a function https://stackoverflow.com/questions/46592833/how-to-use-switch-statement-inside-a-react-component */}
                 {
                     {
-                        'home': <div>
-                                    <Logo />
+                        'home': <div className="main-container">
                                     <Rank name={user.name} entries={user.entries} />
-                                    <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} onFileSelect={this.onFileSelect}/>
-                                    <FaceRecognition boxes={boxes} imageUrl={imageUrl} handleKeypress={this.handleKeypress}/>
+                                    <ImageLinkForm 
+                                        onInputChange={this.onInputChange} 
+                                        onSubmit={this.onSubmit} 
+                                        onFileSelect={this.onFileSelect}
+                                    />
+                                    <FaceRecognition 
+                                        boxes={boxes} 
+                                        imageUrl={imageUrl} 
+                                    />
                                 </div>,
-                        'signin': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} handleKeypress={this.handleKeypress}/>,
-                        'signout': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} handleKeypress={this.handleKeypress}/>,
-                        'register': <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} handleKeypress={this.handleKeypress}/>
+                        'signin': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />,
+                        'signout': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />,
+                        'register': <Register loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
                     }[route]
                 }
             </div>
