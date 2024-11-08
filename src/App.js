@@ -8,6 +8,7 @@ import ParticlesBackground from './components/ParticlesBackground/ParticlesBackg
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
+import { processImage } from './utils/imageProcessing';
 
 const initialState = {
     selectedFile: null,
@@ -166,7 +167,8 @@ class App extends Component {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    imageData: this.state.selectedFile
+                    type: this.state.imageType,
+                    data: this.state.selectedFile
                 })
             });
             
@@ -215,17 +217,17 @@ class App extends Component {
         this.setState({route: route});
     }
 
-    onFileSelect = (file) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            // The result attribute contains the base64 string
-            const base64String = reader.result.split(',')[1];
+    onFileSelect = async (file) => {
+        try {
+            const processedImage = await processImage(file);
             this.setState({ 
-                selectedFile: base64String,
+                selectedFile: processedImage.data,
+                imageType: processedImage.type,
                 imageUrl: URL.createObjectURL(file)
             });
-        };
-        reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Error processing image:', error);
+        }
     }
 
     render(){
