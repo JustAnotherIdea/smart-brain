@@ -27,7 +27,58 @@ const initialState = {
 class App extends Component {
     constructor() {
         super();
-        this.state = initialState;
+        this.state = {
+            ...initialState,
+            token: null
+        };
+    }
+
+    componentDidMount() {
+        // Check for token in URL (Google OAuth callback)
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        
+        if (token) {
+            this.handleAuthToken(token);
+            // Clean up URL
+            window.history.replaceState({}, document.title, window.location.pathname);
+        } else {
+            // Check for stored token
+            const storedToken = localStorage.getItem('token');
+            if (storedToken) {
+                this.handleAuthToken(storedToken);
+            }
+        }
+    }
+
+    handleAuthToken = (token) => {
+        localStorage.setItem('token', token);
+        this.setState({ token });
+        this.fetchUserProfile(token);
+    }
+
+    fetchUserProfile = async (token) => {
+        try {
+            const response = await fetch('https://master.smart-brain-api.c66.me/profile/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const user = await response.json();
+            if (user.id) {
+                this.loadUser(user);
+                this.onRouteChange('home');
+            }
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            this.handleSignOut();
+        }
+    }
+
+    handleSignOut = () => {
+        localStorage.removeItem('token');
+        this.setState(initialState);
+        this.onRouteChange('signout');
     }
 
     /*checkImage = (url) => {
@@ -94,7 +145,10 @@ class App extends Component {
         try {
             const response = await fetch("https://master.smart-brain-api.c66.me/imageupload", {
                 method: "POST",
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.state.token}`
+                },
                 body: JSON.stringify({
                     imageData: this.state.selectedFile
                 })

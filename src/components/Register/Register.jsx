@@ -1,4 +1,5 @@
 import React from "react";
+import GoogleSignIn from '../GoogleSignIn/GoogleSignIn';
 
 class Register extends React.Component {
     constructor(props) {
@@ -84,6 +85,10 @@ class Register extends React.Component {
                     className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
                     type="submit" 
                     value="Register"/>
+                    </div>
+                    <div className="mv3">
+                        <div className="b">OR</div>
+                        <GoogleSignIn />
                     </div>
                 </div>
             </div>

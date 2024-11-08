@@ -1,4 +1,5 @@
 import React from "react";
+import GoogleSignIn from '../GoogleSignIn/GoogleSignIn';
 
 class SignIn extends React.Component {
     constructor(props) {
@@ -57,6 +58,10 @@ class SignIn extends React.Component {
                         <input onChange={this.onPasswordChange} className="b pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100" type="password" name="password"  id="password"/>
                     </div>
                     </fieldset>
+                    <div className="mv3">
+                        <div className="b">OR</div>
+                        <GoogleSignIn />
+                    </div>
                     <div className="">
                     <input 
                     onClick={this.onSubmitSignIn}
@@ -65,7 +70,7 @@ class SignIn extends React.Component {
                     value="Sign in"/>
                     </div>
                     <div className="lh-copy mt3">
-                    <p onClick={() => onRouteChange('register')} href="#0" className="f5 link dim black db pointer">Register</p>
+                    <p onClick={() => onRouteChange('register')} className="f5 link dim black db pointer">Register</p>
                     </div>
                 </div>
             </div>
