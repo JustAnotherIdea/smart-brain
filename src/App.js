@@ -105,7 +105,7 @@ class App extends Component {
             
             if (result && result.status && result.status.description !== "Failure") {
                 try {
-                    const imageResponse = await fetch('https://master.smart-brain-api.c66.me/image', {
+                    const imageResponse = await fetch('https://master.smart-brain-api.c66.me/increment', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json'},
                         body: JSON.stringify({
