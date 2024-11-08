@@ -24,3 +24,14 @@
     cursor: pointer;
     caret-color: transparent;
 }
+
+.detected-text {
+    background: rgba(20, 157, 242, 0.8);
+    color: white;
+    padding: 2px 6px;
+    font-size: 12px;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    white-space: nowrap;
+}

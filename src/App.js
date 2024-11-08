@@ -10,7 +10,7 @@ import SignIn from './components/SignIn/SignIn';
 import Register from './components/Register/Register';
 
 const initialState = {
-    input: '',
+    selectedFile: null,
     imageUrl: '',
     boxes: [],
     route: 'signin',
@@ -49,11 +49,11 @@ class App extends Component {
         }});
     }
 
-    calcFaceLoc = (data) => {
-        console.log('Face detection response:', data);
+    calcTextRegions = (data) => {
+        console.log('OCR detection response:', data);
         
         if (!data?.outputs?.[0]?.data?.regions) {
-            console.log('No face regions found in response');
+            console.log('No text regions found in response');
             return [];
         }
         
@@ -63,12 +63,13 @@ class App extends Component {
         const boxArr = [];
         
         for(let i = 0; i < data.outputs[0].data.regions.length; i++) {
-            let face = data.outputs[0].data.regions[i].region_info.bounding_box;
+            let region = data.outputs[0].data.regions[i].region_info.bounding_box;
             boxArr.push({
-                leftCol: face.left_col * width,
-                topRow: face.top_row * height,
-                rightCol: width - face.right_col * width,
-                bottomRow: height - face.bottom_row * height
+                leftCol: region.left_col * width,
+                topRow: region.top_row * height,
+                rightCol: width - region.right_col * width,
+                bottomRow: height - region.bottom_row * height,
+                text: data.outputs[0].data.regions[i].data.text.raw
             });
         }
         return boxArr;
@@ -82,15 +83,21 @@ class App extends Component {
         this.setState({input: event.target.value});
     }
 
-    onSubmit = async (event) => {
-        this.setState({imageUrl: this.state.input});
+    onSubmit = async () => {
+        if (!this.state.selectedFile) {
+            console.log('No file selected');
+            return;
+        }
+
         this.setState({boxes: []});
         
         try {
-            const response = await fetch("https://master.smart-brain-api.c66.me/imageurl", {
+            const response = await fetch("https://master.smart-brain-api.c66.me/imageupload", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({url: this.state.input})
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    imageData: this.state.selectedFile
+                })
             });
             
             const result = await response.json();
@@ -110,20 +117,20 @@ class App extends Component {
                     this.setState(Object.assign(this.state.user, {entries: count}));
                     
                     if (result.outputs && result.outputs[0]?.data?.regions) {
-                        const boxes = this.calcFaceLoc(result);
+                        const boxes = this.calcTextRegions(result);
                         this.displayFaceBox(boxes);
                     } else {
-                        console.log('No faces detected in the image');
+                        console.log('No text detected in the image');
                         this.setState({boxes: []});
                     }
                 } catch (err) {
                     console.error('Error updating entry count:', err);
                 }
             } else {
-                console.error('Face detection failed:', result);
+                console.error('Text detection failed:', result);
             }
         } catch (error) {
-            console.error('Error detecting faces:', error);
+            console.error('Error detecting text:', error);
         }
     }
 
@@ -135,6 +142,19 @@ class App extends Component {
             this.setState({isSignedIn: true});
         }
         this.setState({route: route});
+    }
+
+    onFileSelect = (file) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            // The result attribute contains the base64 string
+            const base64String = reader.result.split(',')[1];
+            this.setState({ 
+                selectedFile: base64String,
+                imageUrl: URL.createObjectURL(file)
+            });
+        };
+        reader.readAsDataURL(file);
     }
 
     render(){
@@ -149,7 +169,7 @@ class App extends Component {
                         'home': <div>
                                     <Logo />
                                     <Rank name={user.name} entries={user.entries} />
-                                    <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit}/>
+                                    <ImageLinkForm onInputChange={this.onInputChange} onSubmit={this.onSubmit} onFileSelect={this.onFileSelect}/>
                                     <FaceRecognition boxes={boxes} imageUrl={imageUrl} handleKeypress={this.handleKeypress}/>
                                 </div>,
                         'signin': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} handleKeypress={this.handleKeypress}/>,
