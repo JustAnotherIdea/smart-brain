@@ -7,6 +7,7 @@ class SignIn extends React.Component {
         this.state = {
             signInEmail: '',
             signInPassword: '',
+            error: ''
         };
     }
 
@@ -33,20 +34,31 @@ class SignIn extends React.Component {
                 password: this.state.signInPassword
             })
         })
-            .then(response => response.json())
-            .then(user => {
-                if (user.id) {
-                    this.props.loadUser(user);
-                    this.props.onRouteChange('home');
-                }
-            })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id) {
+                this.props.loadUser(data);
+                this.props.onRouteChange('home');
+            } else {
+                this.setState({ error: data });
+            }
+        })
+        .catch(err => {
+            this.setState({ error: 'Error signing in' });
+        });
     }
 
     render(){
         const { onRouteChange } = this.props;
+        const { error } = this.state;
         return (
             <div className="br3 ba mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" onKeyDown={this.handleKeypress}>
                 <div className="measure">
+                    {error && (
+                        <div className="dark-red b mb3 tc">
+                            {error}
+                        </div>
+                    )}
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                     <legend className="f2 fw6 ph0 mh0 center">Sign In</legend>
                     <div className="mt3">

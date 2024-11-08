@@ -8,6 +8,7 @@ class Register extends React.Component {
             email: '',
             password: '',
             name: '',
+            error: ''
         };
     }
 
@@ -39,19 +40,30 @@ class Register extends React.Component {
                 name: this.state.name
             })
         })
-            .then(response => response.json())
-            .then(user => {
-                if (user.id) {
-                    this.props.loadUser(user);
-                    this.props.onRouteChange('home');
-                }
-            })
+        .then(response => response.json())
+        .then(data => {
+            if (data.id) {
+                this.props.loadUser(data);
+                this.props.onRouteChange('home');
+            } else {
+                this.setState({ error: data });
+            }
+        })
+        .catch(err => {
+            this.setState({ error: 'Error registering user' });
+        });
     }
 
     render() {
+        const { error } = this.state;
         return (
             <div className="br3 ba mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" onKeyDown={this.handleKeypress}>
                 <div className="measure">
+                    {error && (
+                        <div className="dark-red b mb3 tc">
+                            {error}
+                        </div>
+                    )}
                     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                     <legend className="f2 fw6 ph0 mh0 center">Register</legend>
                     <div className="mt3">
