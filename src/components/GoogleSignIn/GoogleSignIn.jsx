@@ -1,5 +1,6 @@
 import React from 'react';
 import './GoogleSignIn.css';
+import googleLogo from './google-g-logo.svg';
 
 const GoogleSignIn = () => {
   const handleGoogleSignIn = () => {
@@ -14,7 +15,7 @@ const GoogleSignIn = () => {
       <div className="google-icon-wrapper">
         <img 
           className="google-icon" 
-          src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+          src={googleLogo}
           alt="Google sign-in" 
         />
       </div>

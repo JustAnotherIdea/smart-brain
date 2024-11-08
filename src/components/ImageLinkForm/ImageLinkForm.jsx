@@ -11,21 +11,21 @@ const ImageLinkForm = ({onFileSelect, onSubmit}) => {
     };
 
     return (
-        <div>
-            <p className="f3">
-                {'This Magic Brain will detect text in your pictures. Give it a try'}
+        <div className="image-form-container">
+            <p className="form-text">
+                Upload an image to detect text
             </p>
-            <div className="center">
-                <div className="form center pa4 br3 shadow-5">
+            <div className="form-wrapper">
+                <div className="input-group">
                     <input 
-                        className="f4 pa2 w-70 center br3" 
+                        className="file-input" 
                         type="file" 
                         accept="image/*"
                         ref={fileInputRef}
                         onChange={handleFileChange}
                     />
                     <button 
-                        className="w-30 br3 ba b--black-20 grow f4 link ph3 pv2 dib white bg-light-purple" 
+                        className="detect-button" 
                         onClick={onSubmit}
                     >
                         Detect

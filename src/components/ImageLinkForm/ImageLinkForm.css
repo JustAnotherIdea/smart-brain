@@ -1,4 +1,93 @@
-.form {
-    width: 700px;
-    background-position: 0px 0px, 8px 8px, 0px 1px, 8px 9px; background-repeat: repeat, repeat, repeat, repeat; background-attachment: scroll, scroll, scroll, scroll; background-image: radial-gradient(black 15%, transparent 16%), radial-gradient(black 15%, transparent 16%), radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%), radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%); background-origin: padding-box, padding-box, padding-box, padding-box; background-clip: border-box, border-box, border-box, border-box; background-color: rgb(40, 40, 40); background-size: 16px 16px; --darkreader-inline-bgimage: radial-gradient(#000000 15%, rgba(0, 0, 0, 0) 16%),  radial-gradient(#000000 15%, rgba(0, 0, 0, 0) 16%),  radial-gradient(rgba(24, 26, 27, 0.1) 15%, rgba(0, 0, 0, 0) 20%),  radial-gradient(rgba(24, 26, 27, 0.1) 15%, rgba(0, 0, 0, 0) 20%); --darkreader-inline-bgcolor: #1e2122;
+.image-form-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.form-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-wrapper {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1.5rem;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.file-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    cursor: pointer;
+}
+
+.file-input::-webkit-file-upload-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    color: white;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: background 0.2s ease;
+}
+
+.file-input::-webkit-file-upload-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.detect-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    background: #4285f4;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.detect-button:hover {
+    background: #3367d6;
+    transform: translateY(-1px);
+}
+
+.detect-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    .form-text {
+        font-size: 1rem;
+    }
+
+    .form-wrapper {
+        padding: 1rem;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    .file-input,
+    .detect-button {
+        width: 100%;
+    }
 }

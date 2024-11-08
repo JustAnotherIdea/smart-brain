@@ -16,6 +16,7 @@ const initialState = {
     boxes: [],
     route: 'signin',
     isSignedIn: false,
+    isLoading: false,
     user: {
         id: '',
         name: '',
@@ -160,7 +161,7 @@ class App extends Component {
             return;
         }
 
-        this.setState({boxes: []});
+        this.setState({ boxes: [], isLoading: true });
         
         try {
             const response = await authenticatedFetch("https://master.smart-brain-api.c66.me/imageupload", {
@@ -204,6 +205,8 @@ class App extends Component {
         } catch (error) {
             if (error.message === 'Session expired') return;
             console.error('Error detecting text:', error);
+        } finally {
+            this.setState({ isLoading: false });
         }
     }
 
@@ -250,7 +253,8 @@ class App extends Component {
                                     />
                                     <FaceRecognition 
                                         boxes={boxes} 
-                                        imageUrl={imageUrl} 
+                                        imageUrl={imageUrl}
+                                        isLoading={this.state.isLoading}
                                     />
                                 </div>,
                         'signin': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />,
