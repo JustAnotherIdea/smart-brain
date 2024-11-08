@@ -24,6 +24,25 @@ const initialState = {
     }
 }
 
+const authenticatedFetch = async (url, options = {}) => {
+    const response = await fetch(url, {
+        ...options,
+        headers: {
+            ...options.headers,
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    
+    if (response.status === 401) {
+        // Token expired
+        localStorage.removeItem('token');
+        window.location.href = '/signin';
+        throw new Error('Session expired');
+    }
+    
+    return response;
+};
+
 class App extends Component {
     constructor() {
         super();
@@ -59,11 +78,11 @@ class App extends Component {
 
     fetchUserProfile = async (token) => {
         try {
-            const response = await fetch('https://master.smart-brain-api.c66.me/profile/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await authenticatedFetch('https://master.smart-brain-api.c66.me/profile/me');
+            if (response.status === 401) {  // Unauthorized - token expired
+                this.handleSignOut();
+                return;
+            }
             const user = await response.json();
             if (user.id) {
                 this.loadUser(user);
@@ -143,12 +162,9 @@ class App extends Component {
         this.setState({boxes: []});
         
         try {
-            const response = await fetch("https://master.smart-brain-api.c66.me/imageupload", {
+            const response = await authenticatedFetch("https://master.smart-brain-api.c66.me/imageupload", {
                 method: "POST",
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.state.token}`
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     imageData: this.state.selectedFile
                 })
@@ -159,7 +175,7 @@ class App extends Component {
             
             if (result && result.status && result.status.description !== "Failure") {
                 try {
-                    const imageResponse = await fetch('https://master.smart-brain-api.c66.me/increment', {
+                    const imageResponse = await authenticatedFetch('https://master.smart-brain-api.c66.me/increment', {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json'},
                         body: JSON.stringify({
@@ -184,6 +200,7 @@ class App extends Component {
                 console.error('Text detection failed:', result);
             }
         } catch (error) {
+            if (error.message === 'Session expired') return;
             console.error('Error detecting text:', error);
         }
     }
