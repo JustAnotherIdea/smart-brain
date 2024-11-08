@@ -219,6 +219,9 @@ class App extends Component {
 
     onFileSelect = async (file) => {
         try {
+            // Clear boxes when new file is selected
+            this.setState({ boxes: [] });
+            
             const processedImage = await processImage(file);
             this.setState({ 
                 selectedFile: processedImage.data,
