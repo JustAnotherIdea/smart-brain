@@ -51,10 +51,13 @@ const ParticlesBackground = () => {
                 speed: 0.8,
                 straight: false,
             },
+            position: {
+                x: 0,
+                y: 0
+            },
             number: {
                 density: {
-                    enable: true,
-                    area: 1000,
+                    enable: false
                 },
                 value: 80,
             },
