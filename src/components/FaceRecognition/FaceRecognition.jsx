@@ -3,6 +3,10 @@ import Loading from '../Loading/Loading';
 import './FaceRecognition.css';
 
 const FaceRecognition = ({imageUrl, boxes, isLoading}) => {
+    const shouldShowText = (text) => {
+        return text && text.trim() !== '' && text !== 'BINARY_POSITIVE';
+    };
+
     return (
         <div className="image-recognition-container">
             <div className="image-wrapper">
@@ -23,7 +27,9 @@ const FaceRecognition = ({imageUrl, boxes, isLoading}) => {
                                 left: box.leftCol
                             }}
                         >
-                            <span className="detected-text">{box.text}</span>
+                            {shouldShowText(box.text) && (
+                                <span className="detected-text">{box.text}</span>
+                            )}
                         </div>
                     ))
                 )}

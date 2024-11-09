@@ -137,14 +137,16 @@ class App extends Component {
         
         for(let i = 0; i < data.outputs[0].data.regions.length; i++) {
             let region = data.outputs[0].data.regions[i].region_info.bounding_box;
+            let text = data.outputs[0].data.regions[i].data.text?.raw || 
+                       data.outputs[0].data.regions[i].data.concepts?.[0]?.name || 
+                       '';
+            
             boxArr.push({
                 leftCol: region.left_col * width,
                 topRow: region.top_row * height,
                 rightCol: width - region.right_col * width,
                 bottomRow: height - region.bottom_row * height,
-                text: data.outputs[0].data.regions[i].data.text?.raw || 
-                      data.outputs[0].data.regions[i].data.concepts?.[0]?.name || 
-                      ''
+                text: text
             });
         }
         return boxArr;
