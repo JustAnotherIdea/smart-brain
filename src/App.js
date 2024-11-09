@@ -181,7 +181,8 @@ class App extends Component {
                 body: JSON.stringify({
                     type: this.state.imageType,
                     data: this.state.selectedFile,
-                    modelId: this.state.selectedModel
+                    modelId: this.state.selectedModel,
+                    modelType: this.state.selectedModelType
                 })
             });
             
