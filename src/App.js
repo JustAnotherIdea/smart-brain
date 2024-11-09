@@ -268,23 +268,10 @@ class App extends Component {
 
     onModelTypeSelect = (modelType) => {
         const selectedTypeData = this.state.modelTypes.find(type => type.type === modelType);
-        let defaultModel = '';
-        
-        switch(modelType) {
-            case 'image-color-recognizer':
-                defaultModel = 'color-recognition';
-                break;
-            case 'image-to-text':
-                defaultModel = 'general-english-image-caption-blip';
-                break;
-            default:
-                defaultModel = selectedTypeData?.models[0]?.id || '';
-        }
-
         this.setState({ 
             selectedModelType: modelType,
             models: selectedTypeData ? selectedTypeData.models : [],
-            selectedModel: defaultModel
+            selectedModel: selectedTypeData?.models[0]?.id || ''
         });
     }
 
