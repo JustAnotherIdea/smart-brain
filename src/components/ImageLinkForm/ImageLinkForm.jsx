@@ -1,8 +1,10 @@
 import React, { useRef } from "react";
+import { getAllModels } from '../../config/models';
 import './ImageLinkForm.css';
 
-const ImageLinkForm = ({onFileSelect, onSubmit}) => {
+const ImageLinkForm = ({ onFileSelect, onSubmit, onModelSelect, selectedModel }) => {
     const fileInputRef = useRef(null);
+    const models = getAllModels();
 
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -17,6 +19,17 @@ const ImageLinkForm = ({onFileSelect, onSubmit}) => {
             </p>
             <div className="form-wrapper">
                 <div className="input-group">
+                    <select 
+                        className="model-select"
+                        value={selectedModel}
+                        onChange={(e) => onModelSelect(e.target.value)}
+                    >
+                        {models.map(model => (
+                            <option key={model.id} value={model.id}>
+                                {model.name}
+                            </option>
+                        ))}
+                    </select>
                     <input 
                         className="file-input" 
                         type="file" 

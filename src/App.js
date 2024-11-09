@@ -23,7 +23,8 @@ const initialState = {
         email: '',
         entries: 0,
         joined: '',
-    }
+    },
+    selectedModel: 'ocr-scene-english-paddleocr',
 }
 
 const authenticatedFetch = async (url, options = {}) => {
@@ -236,6 +237,10 @@ class App extends Component {
         }
     }
 
+    onModelSelect = (modelId) => {
+        this.setState({ selectedModel: modelId });
+    }
+
     render(){
         const { isSignedIn, route, boxes, imageUrl, user } = this.state;
         return (
@@ -250,6 +255,8 @@ class App extends Component {
                                         onInputChange={this.onInputChange} 
                                         onSubmit={this.onSubmit} 
                                         onFileSelect={this.onFileSelect}
+                                        onModelSelect={this.onModelSelect}
+                                        selectedModel={this.state.selectedModel}
                                     />
                                     <FaceRecognition 
                                         boxes={boxes} 

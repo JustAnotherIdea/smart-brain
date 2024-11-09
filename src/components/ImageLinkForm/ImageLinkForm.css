@@ -73,6 +73,15 @@
     transform: translateY(0);
 }
 
+.model-select {
+    padding: 0.5rem;
+    margin-right: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: white;
+    min-width: 200px;
+}
+
 @media (max-width: 600px) {
     .form-text {
         font-size: 1rem;
