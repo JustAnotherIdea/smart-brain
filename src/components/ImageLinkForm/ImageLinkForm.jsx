@@ -25,40 +25,42 @@ const ImageLinkForm = ({
             <p className="form-text">Upload an image to detect text</p>
             <div className="form-wrapper">
                 <div className="input-group">
-                    {modelTypes.length > 0 && (
-                        <select 
-                            className="model-type-select"
-                            value={selectedModelType}
-                            onChange={(e) => onModelTypeSelect(e.target.value)}
-                        >
-                            {modelTypes.map(type => (
-                                <option key={type.type} value={type.type}>
-                                    {type.type}
-                                </option>
-                            ))}
-                        </select>
-                    )}
-                    
-                    <input 
-                        type="text"
-                        className="model-search"
-                        placeholder="Search models..."
-                        onChange={(e) => onModelSearch(e.target.value)}
-                    />
-                    
-                    {models.length > 0 && (
-                        <select 
-                            className="model-select"
-                            value={selectedModel}
-                            onChange={(e) => onModelSelect(e.target.value)}
-                        >
-                            {models.map(model => (
-                                <option key={model.id} value={model.id}>
-                                    {model.name}
-                                </option>
-                            ))}
-                        </select>
-                    )}
+                    <div className="model-selection-group">
+                        {modelTypes.length > 0 && (
+                            <select 
+                                className="model-type-select"
+                                value={selectedModelType}
+                                onChange={(e) => onModelTypeSelect(e.target.value)}
+                            >
+                                {modelTypes.map(type => (
+                                    <option key={type.type} value={type.type}>
+                                        {type.type}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                        
+                        <input 
+                            type="text"
+                            className="model-search"
+                            placeholder="Search models..."
+                            onChange={(e) => onModelSearch(e.target.value)}
+                        />
+                        
+                        {models.length > 0 && (
+                            <select 
+                                className="model-select"
+                                value={selectedModel}
+                                onChange={(e) => onModelSelect(e.target.value)}
+                            >
+                                {models.map(model => (
+                                    <option key={model.id} value={model.id}>
+                                        {model.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                    </div>
 
                     <input 
                         className="file-input" 
