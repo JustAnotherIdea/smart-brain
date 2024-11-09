@@ -268,10 +268,23 @@ class App extends Component {
 
     onModelTypeSelect = (modelType) => {
         const selectedTypeData = this.state.modelTypes.find(type => type.type === modelType);
+        let defaultModel = '';
+        
+        switch(modelType) {
+            case 'image-color-recognizer':
+                defaultModel = 'color-recognition';
+                break;
+            case 'image-to-text':
+                defaultModel = 'general-english-image-caption-blip';
+                break;
+            default:
+                defaultModel = selectedTypeData?.models[0]?.id || '';
+        }
+
         this.setState({ 
             selectedModelType: modelType,
             models: selectedTypeData ? selectedTypeData.models : [],
-            selectedModel: selectedTypeData?.models[0]?.id || ''
+            selectedModel: defaultModel
         });
     }
 
@@ -288,7 +301,7 @@ class App extends Component {
     }
 
     render(){
-        const { isSignedIn, route, boxes, imageUrl, user } = this.state;
+        const { isSignedIn, route, boxes, imageUrl, user, selectedModelType } = this.state;
         return (
             <div className="App">
                 <ParticlesBackground />
@@ -304,7 +317,7 @@ class App extends Component {
                                         onModelSelect={this.onModelSelect}
                                         selectedModel={this.state.selectedModel}
                                         modelTypes={this.state.modelTypes}
-                                        selectedModelType={this.state.selectedModelType}
+                                        selectedModelType={selectedModelType}
                                         models={this.state.models}
                                         onModelTypeSelect={this.onModelTypeSelect}
                                         onModelSearch={this.onModelSearch}
@@ -313,6 +326,7 @@ class App extends Component {
                                         boxes={boxes} 
                                         imageUrl={imageUrl}
                                         isLoading={this.state.isLoading}
+                                        modelType={selectedModelType}
                                     />
                                 </div>,
                         'signin': <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />,

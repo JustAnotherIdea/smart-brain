@@ -14,6 +14,17 @@ const ImageLinkForm = ({
 }) => {
     const fileInputRef = useRef(null);
 
+    const getInstructionText = () => {
+        switch(selectedModelType) {
+            case 'image-color-recognizer':
+                return 'Upload an image to analyze its colors';
+            case 'image-to-text':
+                return 'Upload an image to generate a description';
+            default:
+                return 'Upload an image to detect text';
+        }
+    };
+
     const handleFileChange = (e) => {
         if (e.target.files && e.target.files[0]) {
             onFileSelect(e.target.files[0]);
@@ -22,7 +33,7 @@ const ImageLinkForm = ({
 
     return (
         <div className="image-form-container">
-            <p className="form-text">Upload an image to detect text</p>
+            <p className="form-text">{getInstructionText()}</p>
             <div className="form-wrapper">
                 <div className="input-group">
                     <div className="model-selection-group">
@@ -34,7 +45,9 @@ const ImageLinkForm = ({
                             >
                                 {modelTypes.map(type => (
                                     <option key={type.type} value={type.type}>
-                                        {type.type}
+                                        {type.type.split('-').map(word => 
+                                            word.charAt(0).toUpperCase() + word.slice(1)
+                                        ).join(' ')}
                                     </option>
                                 ))}
                             </select>
@@ -75,7 +88,7 @@ const ImageLinkForm = ({
                         onClick={onSubmit}
                         disabled={!selectedModel || !models.length}
                     >
-                        Detect
+                        {selectedModelType === 'image-color-recognizer' ? 'Analyze' : 'Detect'}
                     </button>
                 </div>
             </div>
