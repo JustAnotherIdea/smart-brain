@@ -25,6 +25,11 @@ const initialState = {
         joined: '',
     },
     selectedModel: 'ocr-scene-english-paddleocr',
+    modelTypes: [],
+    selectedModelType: 'visual-detector',
+    models: [],
+    filteredModels: [],
+    modelSearchQuery: '',
 }
 
 const authenticatedFetch = async (url, options = {}) => {
@@ -77,6 +82,7 @@ class App extends Component {
         localStorage.setItem('token', token);
         this.setState({ token });
         this.fetchUserProfile(token);
+        this.fetchModels();
     }
 
     fetchUserProfile = async (token) => {
@@ -245,6 +251,20 @@ class App extends Component {
     onModelSelect = (modelId) => {
         this.setState({ selectedModel: modelId });
     }
+
+    fetchModels = async () => {
+        try {
+            const response = await authenticatedFetch('https://master.smart-brain-api.c66.me/models');
+            const modelData = await response.json();
+            this.setState({ 
+                modelTypes: modelData,
+                models: modelData[0].models,
+                selectedModel: modelData[0].models[0].id
+            });
+        } catch (error) {
+            console.error('Error fetching models:', error);
+        }
+    };
 
     render(){
         const { isSignedIn, route, boxes, imageUrl, user } = this.state;
