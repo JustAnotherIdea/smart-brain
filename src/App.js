@@ -142,7 +142,9 @@ class App extends Component {
                 topRow: region.top_row * height,
                 rightCol: width - region.right_col * width,
                 bottomRow: height - region.bottom_row * height,
-                text: data.outputs[0].data.regions[i].data.text.raw
+                text: data.outputs[0].data.regions[i].data.text?.raw || 
+                      data.outputs[0].data.regions[i].data.concepts?.[0]?.name || 
+                      ''
             });
         }
         return boxArr;
