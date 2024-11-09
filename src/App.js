@@ -170,7 +170,8 @@ class App extends Component {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     type: this.state.imageType,
-                    data: this.state.selectedFile
+                    data: this.state.selectedFile,
+                    modelId: this.state.selectedModel
                 })
             });
             
