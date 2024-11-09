@@ -266,6 +266,27 @@ class App extends Component {
         }
     };
 
+    onModelTypeSelect = (modelType) => {
+        const selectedTypeData = this.state.modelTypes.find(type => type.type === modelType);
+        this.setState({ 
+            selectedModelType: modelType,
+            models: selectedTypeData ? selectedTypeData.models : [],
+            selectedModel: selectedTypeData?.models[0]?.id || ''
+        });
+    }
+
+    onModelSearch = (query) => {
+        this.setState({ modelSearchQuery: query });
+        const selectedTypeData = this.state.modelTypes.find(type => type.type === this.state.selectedModelType);
+        if (selectedTypeData) {
+            const filtered = selectedTypeData.models.filter(model => 
+                model.name.toLowerCase().includes(query.toLowerCase()) ||
+                model.description?.toLowerCase().includes(query.toLowerCase())
+            );
+            this.setState({ models: filtered });
+        }
+    }
+
     render(){
         const { isSignedIn, route, boxes, imageUrl, user } = this.state;
         return (
@@ -282,6 +303,11 @@ class App extends Component {
                                         onFileSelect={this.onFileSelect}
                                         onModelSelect={this.onModelSelect}
                                         selectedModel={this.state.selectedModel}
+                                        modelTypes={this.state.modelTypes}
+                                        selectedModelType={this.state.selectedModelType}
+                                        models={this.state.models}
+                                        onModelTypeSelect={this.onModelTypeSelect}
+                                        onModelSearch={this.onModelSearch}
                                     />
                                     <FaceRecognition 
                                         boxes={boxes} 

@@ -4,10 +4,10 @@ import './ImageLinkForm.css';
 const ImageLinkForm = ({ 
     onFileSelect, 
     onSubmit, 
-    modelTypes, 
-    selectedModelType,
-    models,
-    selectedModel,
+    modelTypes = [],
+    selectedModelType = '',
+    models = [],
+    selectedModel = '',
     onModelTypeSelect,
     onModelSelect,
     onModelSearch 
@@ -25,17 +25,19 @@ const ImageLinkForm = ({
             <p className="form-text">Upload an image to detect text</p>
             <div className="form-wrapper">
                 <div className="input-group">
-                    <select 
-                        className="model-type-select"
-                        value={selectedModelType}
-                        onChange={(e) => onModelTypeSelect(e.target.value)}
-                    >
-                        {modelTypes.map(type => (
-                            <option key={type.type} value={type.type}>
-                                {type.type}
-                            </option>
-                        ))}
-                    </select>
+                    {modelTypes.length > 0 && (
+                        <select 
+                            className="model-type-select"
+                            value={selectedModelType}
+                            onChange={(e) => onModelTypeSelect(e.target.value)}
+                        >
+                            {modelTypes.map(type => (
+                                <option key={type.type} value={type.type}>
+                                    {type.type}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                     
                     <input 
                         type="text"
@@ -44,17 +46,19 @@ const ImageLinkForm = ({
                         onChange={(e) => onModelSearch(e.target.value)}
                     />
                     
-                    <select 
-                        className="model-select"
-                        value={selectedModel}
-                        onChange={(e) => onModelSelect(e.target.value)}
-                    >
-                        {models.map(model => (
-                            <option key={model.id} value={model.id}>
-                                {model.name}
-                            </option>
-                        ))}
-                    </select>
+                    {models.length > 0 && (
+                        <select 
+                            className="model-select"
+                            value={selectedModel}
+                            onChange={(e) => onModelSelect(e.target.value)}
+                        >
+                            {models.map(model => (
+                                <option key={model.id} value={model.id}>
+                                    {model.name}
+                                </option>
+                            ))}
+                        </select>
+                    )}
 
                     <input 
                         className="file-input" 
@@ -64,7 +68,11 @@ const ImageLinkForm = ({
                         onChange={handleFileChange}
                     />
                     
-                    <button className="detect-button" onClick={onSubmit}>
+                    <button 
+                        className="detect-button" 
+                        onClick={onSubmit}
+                        disabled={!selectedModel || !models.length}
+                    >
                         Detect
                     </button>
                 </div>
